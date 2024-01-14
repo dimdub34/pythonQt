@@ -1,0 +1,466 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>Python - GUI</title>
+
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/custom.css">
+
+	<!-- Theme used for syntax highlighting of code -->
+	<link rel="stylesheet" href="lib/css/zenburn.css">
+	<style>
+		.reveal section {
+			text-align: left;
+		}
+	</style>
+
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+		document.getElementsByTagName('head')[0].appendChild(link);
+	</script>
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+
+			<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                TITRE ET CONTENU
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+			<section>
+				<section style="text-align: center;">
+					<h2>Python - GUI avec Qt</h2>
+					<img class="plain" src="img/pyqt.png" width="150px" />
+					<h4>Dimitri Dubois</h4>
+					<p><a href="mailto:dimitri.dubois@umontpellier.fr">dimitri.dubois@umontpellier.fr</a></p>
+				</section>
+				<section>
+					<h2>Contenu</h2>
+					<ul>
+						<li><a href="#intro">Introduction</a></li>
+						<li><a href="#pyqt">La bibliothèque PyQt5</a></li>
+						<li><a href="#designer">Qt Designer</a></li>
+						<li><a href="#signaux">Signaux et slots</a></li>
+						<li><a href="#plus_loin">Pour aller plus loin</a></li>
+					</ul>
+				</section>
+			</section>
+
+			<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                    INTRO
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+			<section id="intro">
+				<section>
+					<h2>Introduction</h2>
+				</section>
+				<section>
+					<h3>Qt</h3>
+					<ul>
+						<li>bibliothèque logicielle offrant des composants d'interface graphique (widgets)</li>
+						<li>développée par Trolltech depuis 1991</li>
+						<li>développée en C++</li>
+						<li>sous licence LGPL ou propriétaire</li>
+						<li>utilisée par Google, Skype, Boeing, Adobe ...</li>
+						<li>actuellement version 6 (Qt6)</li>
+					</ul>
+				</section>
+				<section>
+					<h3>Autres bibliothèques graphiques</h3>
+					<ul>
+						<li>.NET (windows)</li>
+						<li>Cocoa (Mac os)</li>
+						<li>GTK (Linux)</li>
+						<li>wxWidgets</li>
+					</ul>
+				</section>
+				<section>
+					<h3>Modules de Qt</h3>
+					<ul>
+						<li>QtCore: boucle événementielle, mécanisme signaux/slots, threads ...</li>
+						<li>QtGui: images, couleurs ...</li>
+						<li>QtWidgets: éléments graphiques (fenêtres, labels, boutons, boutons radio ...)</li>
+						<li>QtWebKit: intégration des languages du web</li>
+						<li>QtMultimedia: audio et vidéo</li>
+						<li>liste de tous les modules: <a href="http://doc.qt.io/qt-5/modules-cpp.html"
+								target="_blank">ici</a></li>
+					</ul>
+				</section>
+				<section>
+					<h3>Avantages de Qt</h3>
+					<ul>
+						<li>multiplateforme</li>
+						<li>gratuit</li>
+						<li>simple d'utilisation</li>
+						<li>communauté importante</li>
+						<li>documentation très complète - <a href="http://doc.qt.io/qt-5/classes.html"
+								target="_blank">liste de toutes les classes</a></li>
+					</ul>
+				</section>
+			</section>
+
+			<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                    PYQT
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+			<section id="pyqt">
+				<section>
+					<h2>PyQt</h2>
+				</section>
+				<section>
+					<ul>
+						<li>bibliothèque pour lier Python et Qt</li>
+						<li>les éléments graphiques Qt peuvent être créés en python</li>
+						<li>le module le plus utilisé dans ce cas est le module QtWidgets</li>
+					</ul>
+					<p>&nbsp;</p>
+					<div class="code" style="margin-top: 2px;">
+						<code>
+                                from PyQt5 import QtWidgets
+                            </code>
+					</div>
+				</section>
+				<section>
+					<h3>Module QtWidgets</h3>
+					<p>
+						Le module comporte un certain nombre d'objets utiles
+					</p>
+					<ul>
+						<li>application : QApplication</li>
+						<li>fenêtres: QMainWindow, QDialog, QWidget</li>
+						<li>layout: QVBoxLayout, QHBoxLayout, QGridLayout, QFormLayout</li>
+						<li>boutons: QPushButton, QRadioButton, QCheckBox</li>
+						<li>saisies: QTextEdit, QLineEdit, QSpinBox ...</li>
+						<li>affichages: QLabel, QWebView, QGraphicsView, QLCDNumber ...</li>
+					</ul>
+				</section>
+				<section>
+					<h3>Etapes pour créer une application graphique</h3>
+					<ol>
+						<li>créer instance de QApplication -> crée une application Qt</li>
+						<li>créer une fenêtre</li>
+						<li>ajouter un layout (canevas) et des widgets (labels, boutons etc.) à la fenêtre</li>
+						<li>démarrer une boucle événementielle qui écoute les événements utilisateur, et qui se
+							terminera à la fermeture de l'application</li>
+					</ol>
+				</section>
+				<section>
+					<h3>Exemple</h3>
+					<img class="plain" src="img/exemple_001.png" />
+					<img class="plain" src="img/exemple_001_capture.png" />
+				</section>
+				<section>
+					<h3>Objet QApplication</h3>
+					<ul>
+						<li>création d'une instance de QApplication<br>
+							<code>sys.argv</code> contient le chemin du fichier lancé et les éventuelles options passées
+							au lancement</code>
+						</li>
+						<li><code>app.exec_()</code> démarre une boucle qui écoute les événements (clic souris, touches
+							clavier ...)</li>
+						<li><code>sys.exit(app.exec_())</code> termine le processus lorsque la boucle de l'application
+							s'arrête (fermeture de l'application)</li>
+					</ul>
+				</section>
+				<section>
+					<h3>Récupérer ou modifier les attributs des objets Qt</h3>
+					<p>
+						pour un attribut <code>quelconque</code><br>
+						mutateur: <code>setQuelconque(valeur)</code><br>
+						accesseur: <code>quelconque()</code>
+					</p>
+					<figure>
+						<img class="plain" src="img/exemple_002.png" height="300px" />
+					</figure>
+				</section>
+				<section>
+					<h3>Héritage</h3>
+					<p>création de classes qui héritent des classes de QtWidgets</p>
+					<figure>
+						<img class="plain" src="img/exemple_003.png" />
+					</figure>
+				</section>
+				<section>
+					<h3>Pratique</h3>
+					<p>Créer un fichier premierWidget.py et écrire le code précédent pour créer votre première
+						application graphique</p>
+				</section>
+			</section>
+
+			<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                    DESIGNER
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+			<section id="designer">
+				<section>
+					<h2>Qt Designer</h2>
+				</section>
+				<section>
+					<ul>
+						<li>pour créer les interfaces graphiques manuellement, sans écrire le code</li>
+						<li>outil fourni par Qt</li>
+						<li>l'interface graphique est enregistrée au format xml avec l'extension *.ui</li>
+						<li>la commande pyuic5 fichier.ui -o fichier.py transforme le fichier ui en fichier py</li>
+						<li>le fichier python peut ensuite être importé comme tout autre module</li>
+						<li>dans anaconda ouvrir un terminal et taper designer</li>
+					</ul>
+				</section>
+				<section>
+					<h3>Pratique</h3>
+					<p>
+						Ouvrir Qt-Designer (commande <code>designer</code> dans la console anaconda), créer un widget et
+						y placer des
+						éléments
+					</p>
+					<img src="img/widget_example_001.png" class="plain">
+				</section>
+				<section>
+					<h3>Transformation du fichier *.ui en fichier *.py</h3>
+					<p>dans un terminal, via anaconda, se placer dans le dossier du fichier *.ui et taper la commande
+						<code>pyuic5 fichier.ui -o fichier.py</code>
+					</p>
+				</section>
+				<section>
+					<h4>Utilisation du fichier py généré</h4>
+					<ul>
+						<li>importer le module</li>
+						<li>créer une classe qui hérite de QtWidgets</li>
+						<li>dans cette classe instancier l'objet du module et le placer dans un attribut de la classe
+							(self.ui par exemple), appeler la méthode setupUi</li>
+					</ul>
+					<img class="plain" src="img/widget_example_001_code.png">
+				</section>
+				<section>
+					<h3>Pratique</h3>
+					<p>transformer la fenêtre de l'exercice pratique précédent en code python, puis écrire le code pour
+						la faire afficher.
+					</p>
+				</section>
+			</section>
+
+			<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                        SIGNAUX ET SLOTS
+			~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+			<section id="signaux">
+				<section>
+					<h2>Signaux et slots</h2>
+				</section>
+				<section>
+					<ul>
+						<li>les widgets émettent des signaux (clic sur un bouton, sélection d'une checkbox, fermeture
+							d'une fenêtre etc.)</li>
+						<li>les signaux peuvent être connectés à des slots (fonctions appelées lorsque le signal est
+							émis)</li>
+						<li>pour connecter un signal à un slot: <code>widget.signal.connect(slot)</code></li>
+						<li>pour connaître les signaux émis par un widget il faut se référer à la documentation du
+							widget (ou de sa classe mère)<br>
+							Exemple <a href="http://doc.qt.io/qt-5/qabstractbutton.html#signals" target="_blank">signaux
+								émis par un QPushButton</a></li>
+					</ul>
+				</section>
+				<section>
+					<h3>QPushButton - clicked</h3>
+					<img class="plain" src="img/bouton_signal.png" />
+				</section>
+				<section>
+					<h3>Principaux signaux</h3>
+					<ul>
+						<li>QPushButton, QRadioButton: clicked, pressed, released</li>
+						<li>QDialogButtonBox: accepted (bouton OK), rejected (bouton Cancel)</li>
+						<li>QLineEdit: textChanged(QString), editingFinished</li>
+						<li>QTextEdit: textChanged</li>
+						<li>QCheckBox: stateChanged(int state)</li>
+						<li>QComboBox: currentIndexChanged(int index)</li>
+						<li>QAction (ajoutée à QMenu): triggered</li>
+					</ul>
+				</section>
+				<section>
+					<p>
+						Connecter le bouton Cancel à une fonction qui ferme la fenêtre, et le bouton Ok à une fonction
+						qui récupère le contenu des widgets et les affiche dans la console.
+					</p>
+					<img class="plain" src="img/widget_example_001_signaux.png">
+				</section>
+			</section>
+
+			<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+La suite comporte des détails sur les éléments graphiques de Qt
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+			<section id="plus_loin">
+				<section>
+					<h2>Pour aller plus loin ...</h2>
+					<p>
+						Les slides qui suivent donnent des détails sur les différents éléments graphiques
+					</p>
+				</section>
+			</section>
+
+			<section id="fenetres">
+				<section>
+					<h2>Les fenêtres</h2>
+				</section>
+				<section>
+					<ul>
+						<li>QMainWindow: fenêtre principale d'une application (avec menus etc.)</li>
+						<li>QDialog: fenêtre de dialogue (souvent modale)</li>
+						<li>QWidget: fenêtre simple</li>
+					</ul>
+				</section>
+				<section>
+					<h3>QMainWindow</h3>
+					<ul>
+						<li>objet QMenuBar pour une barre de menu</li>
+						<li>setMenuBar(la_barre_de_menu)</li>
+						<li>objet QMenu pour un menu</li>
+						<li>la_barre_de_menu.addMenu(le_menu) pour ajouter le_menu à la barre de menu</li>
+						<li>les sous-menus sont des QAction()</li>
+					</ul>
+					<div class="code">
+						<code>
+                                self.ma_barre_de_menu = QMenuBar()<br>
+                                self.setMenuBar(self.ma_barre_de_menu)<br>
+                                self.menu_fichier = QMenu("Fichier")<br>
+                                self.ma_barre_de_menu.addMenu(self.menu_fichier)<br>
+                                self.action_quitter = QAction("Quitter", self)<br>
+                                self.menu_fichier.addAction(self.action_quitter)
+                            </code>
+					</div>
+				</section>
+				<section>
+					<p>il faut ajouter un widget à la fenêtre avec la méthode setCentralWidget</p>
+					<img class="plain" src="img/exemple_004.png" />
+				</section>
+				<section id="formlayout">
+					<h3>QDialog</h3>
+					<ul>
+						<li>fenêtre modale (attachée à une autre fenêtre)</li>
+					</ul>
+					<img class="plain" src="img/exemple_005.png" />
+				</section>
+			</section>
+
+			<section id="layout">
+				<section>
+					<h2>Les layout</h2>
+				</section>
+				<section>
+					<ul>
+						<li>QVBoxLayout: layout vertical</li>
+						<li>QHBoxLayout: layout horizontal</li>
+						<li>QFormLayout: layout pour les formulaires (2 colonnes), cf. exemple <a
+								href="#formlayout">ici</a></li>
+						<li>QGridLayout: grille</li>
+					</ul>
+				</section>
+				<section>
+					<h3>QGridLayout</h3>
+					<ul style="font-size: 0.75em;">
+						<li>remplissage cellule par cellule, numérotation commence à 0</li>
+					</ul>
+					<img class="plain" src="img/grid_layout.png" height="400px" />
+				</section>
+			</section>
+
+			<section id="widgets">
+				<section>
+					<h2>Principaux widgets</h2>
+				</section>
+				<section>
+					<h3>QLabel</h3>
+					<ul>
+						<li>peut aussi servir à afficher une image</li>
+					</ul>
+					<img class="plain" src="img/label_img.png" />
+				</section>
+				<section>
+					<h3>QLineEdit et QTextEdit</h3>
+					<ul>
+						<li>QLineEdit: pour saisie/affichage sur une ligne</li>
+						<li>QTextEdit: pour saisie/affichage multiligne. Accepte le html</li>
+					</ul>
+					<img class="plain" src="img/widget_texte.png" />
+				</section>
+				<section>
+					<h3>QPushButton et QDialogBoxButton</h3>
+					<ul>
+						<li>QPushButton: bouton standard - <code>bouton = QPushButton("OK")</code></li>
+						<li>QDialogBoxButton: bouton pour les boîtes de dialogue (cf. <a href="#formlayout">ici</a>)
+						</li>
+					</ul>
+				</section>
+				<section>
+					<h3>QRadioButton</h3>
+					<ul>
+						<li>un QRadioButtonGroup pour grouper les boutons</li>
+						<li>un horizontal layout pour mettre les boutons les uns à côté des autres</li>
+					</ul>
+					<img class="plain" src="img/radio_buttons.png" />
+				</section>
+				<section>
+					<h3>QCheckBox</h3>
+					<img class="plain" src="img/checkbox.png" />
+				</section>
+				<section>
+					<h3>QComboBox</h3>
+					<img class="plain" src="img/combobox.png" />
+				</section>
+			</section>
+
+			<section id="boites_dialogue">
+				<section>
+					<h2>Les boîtes de dialogue</h2>
+				</section>
+				<section>
+					<figure>
+						<img class="plain" src="img/dialog_information.png" />
+					</figure>
+					<figure>
+						<img class="plain" src="img/dialog_warning.png" />
+					</figure>
+				</section>
+				<section>
+					<figure>
+						<img class="plain" src="img/dialog_erreur.png" />
+					</figure>
+					<figure>
+						<img class="plain" src="img/dialog_question.png" />
+					</figure>
+				</section>
+			</section>
+
+			<section id="signaux_avec_args">
+				<h2>Signaux avec arguments</h2>
+				<p>
+					si le signal envoie un argument alors il faut le déclarer dans le slot
+				</p>
+				<img class="plain" src="img/signal_checkbox.png" />
+			</section>
+
+
+		</div>
+	</div>
+
+	<script src="lib/js/head.min.js"></script>
+	<script src="js/reveal.js"></script>
+	<script>
+		// More info about config & dependencies:
+		// - https://github.com/hakimel/reveal.js#configuration
+		// - https://github.com/hakimel/reveal.js#dependencies
+		Reveal.initialize({
+			dependencies: [
+				{ src: 'plugin/markdown/marked.js' },
+				{ src: 'plugin/markdown/markdown.js' },
+				{ src: 'plugin/notes/notes.js', async: true },
+				{ src: 'plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } }
+			]
+		});
+		Reveal.configure({ slideNumber: 'c/t', history: true });
+	</script>
+</body>
+
+</html>
